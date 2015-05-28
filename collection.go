@@ -23,19 +23,20 @@ func (this *Collection) FindAndModify(query, change, result interface{}) error {
 		Update:    change,
 		ReturnNew: true,
 	}
+
 	_, err := this.Collection.Find(query).Apply(changeObj, result)
 	return err
 }
 
-func (this *Collection) FindOrInsert(query, doc, result interface{}) error {
+func (this *Collection) FindOrInsert(query, doc, result interface{}) (bool, error) {
 	changeObj := mgo.Change{
 		Update:    bson.M{"$setOnInsert": doc},
 		Upsert:    true,
 		ReturnNew: true,
 	}
 
-	_, err := this.Collection.Find(query).Apply(changeObj, result)
-	return err
+	res, err := this.Collection.Find(query).Apply(changeObj, result)
+	return res.Updated > 0, err
 }
 
 func (this *Collection) List(query interface{}, start, limit int, sort []string, result interface{}) error {
