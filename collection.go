@@ -36,7 +36,7 @@ func (this *Collection) FindOrInsert(query, doc, result interface{}) (bool, erro
 	}
 
 	res, err := this.Collection.Find(query).Apply(changeObj, result)
-	return res.Updated > 0, err
+	return res.UpsertedId != nil, err
 }
 
 func (this *Collection) List(query interface{}, start, limit int, sort []string, result interface{}) error {
