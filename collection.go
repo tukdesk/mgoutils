@@ -51,6 +51,10 @@ func (this *Collection) FindAll(query interface{}, sort []string, result interfa
 	return this.Collection.Find(query).Sort(sort...).All(result)
 }
 
+func (this *Collection) Count(query interface{}) (int, error) {
+	return this.Collection.Find(query).Count()
+}
+
 func (this *Collection) Release() {
 	this.p.ReleaseCollection(this)
 }
