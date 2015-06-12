@@ -6,6 +6,7 @@ import (
 )
 
 type Collection struct {
+	session *Session
 	*mgo.Collection
 	p *MgoPool
 }
