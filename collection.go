@@ -11,15 +11,15 @@ type Collection struct {
 	p *MgoPool
 }
 
-func (this *Collection) FindOne(query, result interface{}, projection map[string]interface{}) error {
+func (this *Collection) FindOne(query, projection map[string]interface{}, result interface{}) error {
 	return this.Collection.Find(query).Select(projection).One(result)
 }
 
-func (this *Collection) FindById(id, result interface{}, projection map[string]interface{}) error {
+func (this *Collection) FindById(id interface{}, projection map[string]interface{}, result interface{}) error {
 	return this.Collection.FindId(id).Select(projection).One(result)
 }
 
-func (this *Collection) FindAndModify(query, change, result interface{}, projection map[string]interface{}) error {
+func (this *Collection) FindAndModify(query interface{}, projection map[string]interface{}, change, result interface{}) error {
 	changeObj := mgo.Change{
 		Update:    change,
 		ReturnNew: true,
@@ -29,7 +29,7 @@ func (this *Collection) FindAndModify(query, change, result interface{}, project
 	return err
 }
 
-func (this *Collection) FindOrInsert(query, doc, result interface{}, projection map[string]interface{}) (bool, error) {
+func (this *Collection) FindOrInsert(query, projection map[string]interface{}, doc, result interface{}) (bool, error) {
 	changeObj := mgo.Change{
 		Update:    bson.M{"$setOnInsert": doc},
 		Upsert:    true,
@@ -44,11 +44,11 @@ func (this *Collection) FindOrInsert(query, doc, result interface{}, projection 
 	return res.UpsertedId != nil, nil
 }
 
-func (this *Collection) List(query interface{}, start, limit int, sort []string, result interface{}, projection map[string]interface{}) error {
+func (this *Collection) List(query interface{}, projection map[string]interface{}, start, limit int, sort []string, result interface{}) error {
 	return this.Collection.Find(query).Select(projection).Sort(sort...).Skip(start).Limit(limit).All(result)
 }
 
-func (this *Collection) FindAll(query interface{}, sort []string, result interface{}, projection map[string]interface{}) error {
+func (this *Collection) FindAll(query interface{}, projection map[string]interface{}, sort []string, result interface{}) error {
 	return this.Collection.Find(query).Select(projection).Sort(sort...).All(result)
 }
 
