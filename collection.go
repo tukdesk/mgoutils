@@ -29,14 +29,14 @@ func (this *Collection) FindAndModify(query interface{}, projection map[string]i
 	return err
 }
 
-func (this *Collection) FindOrInsert(query, projection map[string]interface{}, doc, result interface{}) (bool, error) {
+func (this *Collection) FindOrInsert(query map[string]interface{}, doc, result interface{}) (bool, error) {
 	changeObj := mgo.Change{
 		Update:    bson.M{"$setOnInsert": doc},
 		Upsert:    true,
 		ReturnNew: true,
 	}
 
-	res, err := this.Collection.Find(query).Select(projection).Apply(changeObj, result)
+	res, err := this.Collection.Find(query).Apply(changeObj, result)
 	if err != nil {
 		return false, err
 	}
